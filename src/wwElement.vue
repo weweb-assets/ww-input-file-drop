@@ -6,11 +6,7 @@
         @dragleave.prevent="dragLeave"
         @drop.prevent="drop($event)"
     >
-        <wwLayout class="ww-input-file-drop__layout" path="layout">
-            <template #default="{ item }">
-                <wwElement v-bind="item" :states="isHover ? ['drag'] : []" />
-            </template>
-        </wwLayout>
+        <wwLayout class="ww-input-file-drop__layout" path="layout" :states="isHover ? ['Drag'] : []" />
         <input
             ref="inputFile"
             class="ww-input-file-drop__input"
@@ -59,7 +55,7 @@ export default {
     },
     data() {
         return {
-            isHover: true,
+            isHover: false,
         };
     },
     computed: {
@@ -101,7 +97,7 @@ export default {
     },
     watch: {
         isHover(value) {
-            this.$emit(value ? 'add-state' : 'remove-state', 'drag');
+            this.$emit(value ? 'add-state' : 'remove-state', 'Drag');
         },
     },
     methods: {
