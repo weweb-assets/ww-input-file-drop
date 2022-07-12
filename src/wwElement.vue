@@ -9,6 +9,7 @@
         <wwLayout class="ww-input-file-drop__layout" path="layout" :states="isHover ? ['Drag'] : []" />
         <input
             ref="inputFile"
+            :value="localValue"
             class="ww-input-file-drop__input"
             type="file"
             :name="wwElementState.name"
@@ -56,6 +57,7 @@ export default {
     data() {
         return {
             isHover: false,
+            localValue: '',
         };
     },
     computed: {
@@ -111,7 +113,10 @@ export default {
             this.isHover = false;
             const input = event.dataTransfer;
             if (!input) return;
-            this.handleFiles(event, [...input.files]);
+            const files = [...input.files].filter(
+                file => !!this.accept.split(/[\.\W]/g).find(type => type && file.type.includes(type))
+            );
+            this.handleFiles(event, files);
         },
         handleManualInput(event) {
             this.handleFiles(event, [...this.$refs['inputFile'].files]);
