@@ -61,7 +61,6 @@ export default {
     },
     computed: {
         required() {
-            console.log(this.variableValue);
             return this.content.required && !this.variableValue;
         },
         isEditing() {
@@ -117,7 +116,7 @@ export default {
             const input = event.dataTransfer;
             if (!input) return;
             const files = [...input.files].filter(
-                file => !!this.accept.split(/[\.\W]/g).find(type => type && file.type.includes(type))
+                file => !this.accept || !!this.accept.split(/[\.\W]/g).find(type => type && file.type.includes(type))
             );
             this.handleFiles(event, files);
         },
