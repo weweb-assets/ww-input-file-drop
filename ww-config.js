@@ -9,13 +9,9 @@ export default {
         { name: 'initValueChange', label: { en: 'On init value change' }, event: { value: '' } },
     ],
     properties: {
-        button: {
-            defaultValue: { isWwObject: true, type: 'ww-button' },
+        layout: {
             hidden: true,
-        },
-        text: {
-            defaultValue: { isWwObject: true, type: 'ww-text' },
-            hidden: true,
+            defaultValue: [],
         },
         multiple: {
             label: 'Multiple',
@@ -28,7 +24,7 @@ export default {
             type: 'OnOff',
             section: 'settings',
             defaultValue: true,
-            bindable: true
+            bindable: true,
         },
         accept: {
             label: 'Extensions',

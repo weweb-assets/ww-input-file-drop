@@ -1,14 +1,18 @@
 <template>
-    <div class="ww-input-file-drop" @click="openFileExplorer">
-        <wwElement class="ww-input-file-drop__button" v-bind="content.button" />
-        <wwElement
-            class="ww-input-file-drop__text"
-            v-bind="content.text"
-            :ww-props="{ text: fileName || 'No file chosen' }"
-        />
+    <div
+        class="ww-input-file-drop"
+        @click="openFileExplorer"
+        @dragover.prevent="dragOver"
+        @dragleave.prevent="dragLeave"
+        @drop.prevent="drop($event)"
+    >
+        <wwLayout class="ww-input-file-drop__layout" path="layout">
+            <template #default="{ item }">
+                <wwElement v-bind="item" :states="isHover ? ['drag'] : []" />
+            </template>
+        </wwLayout>
         <input
             ref="inputFile"
-            :value="localValue"
             class="ww-input-file-drop__input"
             type="file"
             :name="wwElementState.name"
@@ -55,8 +59,7 @@ export default {
     },
     data() {
         return {
-            localValue: null,
-            fileName: null,
+            isHover: true,
         };
     },
     computed: {
@@ -97,24 +100,34 @@ export default {
         },
     },
     watch: {
-        variableValue(newValue) {
-            if (newValue === null) {
-                this.localValue = null;
-                this.fileName = null;
-            }
+        isHover(value) {
+            this.$emit(value ? 'add-state' : 'remove-state', 'drag');
         },
     },
     methods: {
+        dragOver() {
+            this.isHover = true;
+        },
+        dragLeave() {
+            this.isHover = false;
+        },
+        drop(event) {
+            this.isHover = false;
+            const input = event.dataTransfer;
+            if (!input) return;
+            this.handleFiles(event, [...input.files]);
+        },
         handleManualInput(event) {
-            const value = event.target.value;
-            if (value === this.localValue) return;
-            const isMultiple = this.content.multiple;
-            const files = this.$refs['inputFile'].files;
+            this.handleFiles(event, [...this.$refs['inputFile'].files]);
+        },
+        handleFiles(event, files) {
             if (!files || !files.length) return;
-            this.localValue = value;
-            this.fileName = files.length > 1 ? `${files.length} files` : files[0].name;
+            const isMultiple = this.content.multiple;
             this.setValue(isMultiple ? files : files[0]);
-            this.$emit('trigger-event', { name: 'change', event: { domEvent: event, value: isMultiple ? files : files[0] } });
+            this.$emit('trigger-event', {
+                name: 'change',
+                event: { domEvent: event, value: isMultiple ? files : files[0] },
+            });
         },
         openFileExplorer() {
             if (this.isEditing) return;
@@ -129,6 +142,9 @@ export default {
     display: flex;
     align-items: center;
     width: 100%;
+    &__layout {
+        width: 100%;
+    }
     &__input {
         position: absolute;
         opacity: 0;
