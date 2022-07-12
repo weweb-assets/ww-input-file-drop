@@ -13,7 +13,7 @@
             class="ww-input-file-drop__input"
             type="file"
             :name="wwElementState.name"
-            :required="content.required"
+            :required="required"
             :multiple="content.multiple"
             :accept="accept"
             @input="handleManualInput($event)"
@@ -57,10 +57,13 @@ export default {
     data() {
         return {
             isHover: false,
-            localValue: '',
         };
     },
     computed: {
+        required() {
+            console.log(this.variableValue);
+            return this.content.required && !this.variableValue;
+        },
         isEditing() {
             /* wwEditor:start */
             return this.wwEditorState.editMode === wwLib.wwEditorHelper.EDIT_MODES.EDITION;
