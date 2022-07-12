@@ -1,12 +1,6 @@
 <template>
-    <div
-        class="ww-input-file-drop"
-        @click="openFileExplorer"
-        @dragover.prevent="dragOver"
-        @dragleave.prevent="dragLeave"
-        @drop.prevent="drop($event)"
-    >
-        <wwLayout class="ww-input-file-drop__layout" path="layout" :states="isHover ? ['Drag'] : []" />
+    <div class="ww-input-file-drop" @click="openFileExplorer" @drop.prevent="drop($event)">
+        <wwLayout class="ww-input-file-drop__layout" path="layout" />
         <input
             ref="inputFile"
             :value="localValue"
@@ -54,11 +48,6 @@ export default {
 
         return { variableValue, setValue };
     },
-    data() {
-        return {
-            isHover: false,
-        };
-    },
     computed: {
         required() {
             return this.content.required && !this.variableValue;
@@ -99,20 +88,8 @@ export default {
             }
         },
     },
-    watch: {
-        isHover(value) {
-            this.$emit(value ? 'add-state' : 'remove-state', 'Drag');
-        },
-    },
     methods: {
-        dragOver() {
-            this.isHover = true;
-        },
-        dragLeave() {
-            this.isHover = false;
-        },
         drop(event) {
-            this.isHover = false;
             const input = event.dataTransfer;
             if (!input) return;
             const files = [...input.files].filter(
