@@ -1,5 +1,12 @@
 <template>
-    <div class="ww-input-file-drop" @click="openFileExplorer" @drop.prevent="drop($event)">
+    <div
+        class="ww-input-file-drop"
+        @click="openFileExplorer"
+        @dragenter.prevent
+        @dragleave.prevent
+        @dragover.prevent
+        @drop.prevent="drop($event)"
+    >
         <wwLayout class="ww-input-file-drop__layout" path="layout" />
         <input
             ref="inputFile"
@@ -95,6 +102,16 @@ export default {
             const files = [...input.files].filter(
                 file => !this.accept || !!this.accept.split(/[\.\W]/g).find(type => type && file.type.includes(type))
             );
+            const invalidFiles = [...input.files].filter(
+                file => this.accept && !this.accept.split(/[\.\W]/g).find(type => type && file.type.includes(type))
+            );
+            if (invalidFiles.length) {
+                const isMultiple = this.content.multiple;
+                this.$emit('trigger-event', {
+                    name: 'invalidFile',
+                    event: { domEvent: event, value: isMultiple ? invalidFiles : invalidFiles[0] },
+                });
+            }
             this.handleFiles(event, files);
         },
         handleManualInput(event) {
