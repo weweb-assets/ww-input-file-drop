@@ -1,18 +1,20 @@
 <template>
-    <div class="ww-input-file-drop" @click="openFileExplorer">
-        <wwElement class="ww-input-file-drop__button" v-bind="content.button" />
-        <wwElement
-            class="ww-input-file-drop__text"
-            v-bind="content.text"
-            :ww-props="{ text: fileName || 'No file chosen' }"
-        />
+    <div
+        class="ww-input-file-drop"
+        @click="openFileExplorer"
+        @dragenter.prevent
+        @dragleave.prevent
+        @dragover.prevent
+        @drop.prevent="drop($event)"
+    >
+        <wwLayout class="ww-input-file-drop__layout" path="layout" />
         <input
             ref="inputFile"
             :value="localValue"
             class="ww-input-file-drop__input"
             type="file"
             :name="wwElementState.name"
-            :required="content.required"
+            :required="required"
             :multiple="content.multiple"
             :accept="accept"
             @input="handleManualInput($event)"
@@ -53,13 +55,10 @@ export default {
 
         return { variableValue, setValue };
     },
-    data() {
-        return {
-            localValue: null,
-            fileName: null,
-        };
-    },
     computed: {
+        required() {
+            return this.content.required && !this.variableValue;
+        },
         isEditing() {
             /* wwEditor:start */
             return this.wwEditorState.editMode === wwLib.wwEditorHelper.EDIT_MODES.EDITION;
@@ -96,25 +95,36 @@ export default {
             }
         },
     },
-    watch: {
-        variableValue(newValue) {
-            if (newValue === null) {
-                this.localValue = null;
-                this.fileName = null;
-            }
-        },
-    },
     methods: {
+        drop(event) {
+            const input = event.dataTransfer;
+            if (!input) return;
+            const files = [...input.files].filter(
+                file => !this.accept || !!this.accept.split(/[\.\W]/g).find(type => type && file.type.includes(type))
+            );
+            const invalidFiles = [...input.files].filter(
+                file => this.accept && !this.accept.split(/[\.\W]/g).find(type => type && file.type.includes(type))
+            );
+            if (invalidFiles.length) {
+                const isMultiple = this.content.multiple;
+                this.$emit('trigger-event', {
+                    name: 'invalidFile',
+                    event: { domEvent: event, value: isMultiple ? invalidFiles : invalidFiles[0] },
+                });
+            }
+            this.handleFiles(event, files);
+        },
         handleManualInput(event) {
-            const value = event.target.value;
-            if (value === this.localValue) return;
-            const isMultiple = this.content.multiple;
-            const files = this.$refs['inputFile'].files;
+            this.handleFiles(event, [...this.$refs['inputFile'].files]);
+        },
+        handleFiles(event, files) {
             if (!files || !files.length) return;
-            this.localValue = value;
-            this.fileName = files.length > 1 ? `${files.length} files` : files[0].name;
+            const isMultiple = this.content.multiple;
             this.setValue(isMultiple ? files : files[0]);
-            this.$emit('trigger-event', { name: 'change', event: { domEvent: event, value: isMultiple ? files : files[0] } });
+            this.$emit('trigger-event', {
+                name: 'change',
+                event: { domEvent: event, value: isMultiple ? files : files[0] },
+            });
         },
         openFileExplorer() {
             if (this.isEditing) return;
@@ -129,6 +139,9 @@ export default {
     display: flex;
     align-items: center;
     width: 100%;
+    &__layout {
+        width: 100%;
+    }
     &__input {
         position: absolute;
         opacity: 0;

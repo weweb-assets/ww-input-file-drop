@@ -1,3 +1,5 @@
+const DEFAULT_VALUE = [{ name: 'filename.png', size: 100 }];
+
 export default {
     editor: {
         label: 'Input File Drop',
@@ -5,17 +7,14 @@ export default {
         bubble: { icon: 'files' },
     },
     triggerEvents: [
-        { name: 'change', label: { en: 'On change' }, event: { value: '' } },
-        { name: 'initValueChange', label: { en: 'On init value change' }, event: { value: '' } },
+        { name: 'change', label: 'On change', event: { value: DEFAULT_VALUE } },
+        { name: 'initValueChange', label: 'On init value change', event: { value: DEFAULT_VALUE } },
+        { name: 'invalidFile', label: 'On invalid file drop', event: { value: DEFAULT_VALUE } },
     ],
     properties: {
-        button: {
-            defaultValue: { isWwObject: true, type: 'ww-button' },
+        layout: {
             hidden: true,
-        },
-        text: {
-            defaultValue: { isWwObject: true, type: 'ww-text' },
-            hidden: true,
+            defaultValue: [],
         },
         multiple: {
             label: 'Multiple',
@@ -28,7 +27,7 @@ export default {
             type: 'OnOff',
             section: 'settings',
             defaultValue: true,
-            bindable: true
+            bindable: true,
         },
         accept: {
             label: 'Extensions',
