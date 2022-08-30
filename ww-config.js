@@ -7,7 +7,7 @@ export default {
         bubble: { icon: 'files' },
     },
     triggerEvents: [
-        { name: 'change', label: 'On change', event: { value: DEFAULT_VALUE } },
+        { name: 'change', label: 'On change', event: { value: DEFAULT_VALUE }, default: true },
         { name: 'initValueChange', label: 'On init value change', event: { value: DEFAULT_VALUE } },
         { name: 'invalidFile', label: 'On invalid file drop', event: { value: DEFAULT_VALUE } },
     ],
