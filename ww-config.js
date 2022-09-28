@@ -28,6 +28,12 @@ export default {
             section: 'settings',
             defaultValue: true,
             bindable: true,
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'boolean',
+                tooltip: 'A boolean that defines if the input is required: `true | false`',
+            },
+            /* wwEditor:end */
         },
         accept: {
             label: 'Extensions',
