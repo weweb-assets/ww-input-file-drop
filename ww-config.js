@@ -3,8 +3,8 @@ const DEFAULT_VALUE = [{ name: 'filename.png', size: 100 }];
 export default {
     editor: {
         label: 'Input File Drop',
-        icon: 'files',
-        bubble: { icon: 'files' },
+        icon: 'upload',
+        bubble: { icon: 'upload' },
     },
     triggerEvents: [
         { name: 'change', label: 'On change', event: { value: DEFAULT_VALUE }, default: true },
