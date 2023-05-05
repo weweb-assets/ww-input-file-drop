@@ -2,9 +2,9 @@
     <div
         class="ww-input-file-drop"
         @click="openFileExplorer"
-        @dragenter.prevent
+        @dragenter="onDragEnter"
         @dragleave.prevent
-        @dragover.prevent
+        @dragover="onDragOver"
         @drop.prevent="drop($event)"
     >
         <wwLayout class="ww-input-file-drop__layout" path="layout" />
@@ -15,6 +15,7 @@
             type="file"
             :name="wwElementState.name"
             :required="required"
+            :readonly="isReadonly"
             :multiple="content.multiple"
             :accept="accept"
             @input="handleManualInput($event)"
@@ -32,7 +33,7 @@ export default {
         uid: { type: String, required: true },
         wwElementState: { type: Object, required: true },
     },
-    emits: ['trigger-event'],
+    emits: ['trigger-event', 'add-state', 'remove-state'],
     setup(props) {
         const { value: variableValue, setValue } = wwLib.wwVariable.useComponentVariable({
             uid: props.uid,
@@ -94,6 +95,28 @@ export default {
                     return '';
             }
         },
+        isReadonly() {
+            /* wwEditor:start */
+            if (this.wwEditorState.isSelected) {
+                return this.wwElementState.states.includes('readonly');
+            }
+            /* wwEditor:end */
+            return this.wwElementState.props.readonly === undefined
+                ? this.content.readonly
+                : this.wwElementState.props.readonly;
+        },
+    },
+    watch: {
+        isReadonly: {
+            immediate: true,
+            handler(value) {
+                if (value) {
+                    this.$emit('add-state', 'readonly');
+                } else {
+                    this.$emit('remove-state', 'readonly');
+                }
+            },
+        },
     },
     methods: {
         drop(event) {
@@ -127,8 +150,18 @@ export default {
             });
         },
         openFileExplorer() {
-            if (this.isEditing) return;
+            if (this.isEditing || this.isReadonly) return;
             this.$refs['inputFile'].click();
+        },
+        onDragEnter(event) {
+            if (this.isEditing || this.isReadonly) return;
+            event.preventDefault();
+            event.stopPropagation();
+        },
+        onDragOver(event) {
+            if (this.isEditing || this.isReadonly) return;
+            event.preventDefault();
+            event.stopPropagation();
         },
     },
 };
