@@ -120,12 +120,19 @@ export default {
     },
     methods: {
         drop(event) {
-            const input = event.dataTransfer;
-            if (!input) return;
-            const files = [...input.files].filter(
+            const blobs = event.dataTransfer?.files;
+
+            if (!blobs) return;
+            const files = [...blobs].map(
+                blob =>
+                    new File([blob], blob.name, {
+                        type: blob.type,
+                    })
+            );
+            const validFiles = files.filter(
                 file => !this.accept || !!this.accept.split(/[\.\W]/g).find(type => type && file.type.includes(type))
             );
-            const invalidFiles = [...input.files].filter(
+            const invalidFiles = files.filter(
                 file => this.accept && !this.accept.split(/[\.\W]/g).find(type => type && file.type.includes(type))
             );
             if (invalidFiles.length) {
