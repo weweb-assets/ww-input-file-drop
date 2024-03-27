@@ -142,7 +142,7 @@ export default {
                     event: { domEvent: event, value: isMultiple ? invalidFiles : invalidFiles[0] },
                 });
             }
-            this.handleFiles(event, files);
+            this.handleFiles(event, validFiles);
         },
         handleManualInput(event) {
             this.handleFiles(event, [...this.$refs['inputFile'].files]);
