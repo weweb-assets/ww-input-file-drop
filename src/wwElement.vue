@@ -3,6 +3,7 @@
         class="ww-input-file-drop"
         @click="openFileExplorer"
         @dragenter="onDragEnter"
+        @dragleave="onDragLeave"
         @dragleave.prevent
         @dragover="onDragOver"
         @drop.prevent="drop($event)"
@@ -55,6 +56,11 @@ export default {
         });
 
         return { variableValue, setValue };
+    },
+    data() {
+        return {
+            isDragging: false,
+        };
     },
     computed: {
         required() {
@@ -117,9 +123,21 @@ export default {
                 }
             },
         },
+        isDragging: {
+            immediate: true,
+            handler(value) {
+                if (value) {
+                    this.$emit('add-state', 'drop');
+                } else {
+                    this.$emit('remove-state', 'drop');
+                }
+            },
+        },
     },
     methods: {
         drop(event) {
+            this.isDragging = false;
+            
             const blobs = event.dataTransfer?.files;
 
             if (!blobs) return;
@@ -164,6 +182,15 @@ export default {
             if (this.isEditing || this.isReadonly) return;
             event.preventDefault();
             event.stopPropagation();
+
+            this.isDragging = true;
+        },
+        onDragLeave(event) {
+            if (this.isEditing || this.isReadonly) return;
+            event.preventDefault();
+            event.stopPropagation();
+
+            this.isDragging = false;
         },
         onDragOver(event) {
             if (this.isEditing || this.isReadonly) return;
