@@ -136,6 +136,8 @@ export default {
     },
     methods: {
         drop(event) {
+            this.isDragging = false;
+            
             const blobs = event.dataTransfer?.files;
 
             if (!blobs) return;
@@ -194,8 +196,6 @@ export default {
             if (this.isEditing || this.isReadonly) return;
             event.preventDefault();
             event.stopPropagation();
-
-            this.isDragging = false;
         },
     },
 };
