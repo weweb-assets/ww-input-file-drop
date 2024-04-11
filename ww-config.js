@@ -6,6 +6,7 @@ export default {
         icon: 'upload',
         bubble: { icon: 'upload' },
     },
+    states: ['drop'],
     triggerEvents: [
         { name: 'change', label: 'On change', event: { value: DEFAULT_VALUE }, default: true },
         { name: 'initValueChange', label: 'On init value change', event: { value: DEFAULT_VALUE } },
