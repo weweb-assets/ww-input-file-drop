@@ -194,6 +194,8 @@ export default {
             if (this.isEditing || this.isReadonly) return;
             event.preventDefault();
             event.stopPropagation();
+
+            this.isDragging = false;
         },
     },
 };
