@@ -127,9 +127,9 @@ export default {
             immediate: true,
             handler(value) {
                 if (value) {
-                    this.$emit('add-state', 'On Drop');
+                    this.$emit('add-state', 'drop');
                 } else {
-                    this.$emit('remove-state', 'On Drop');
+                    this.$emit('remove-state', 'drop');
                 }
             },
         },
