@@ -148,11 +148,27 @@ export default {
                     })
             );
             const validFiles = files.filter(
-                file => !this.accept || !!this.accept.split(/[\.\W]/g).find(type => type && file.type.includes(type))
+                file => {
+                    if(!this.accept){
+                        return true;
+                    }
+                    else {
+                        const types = this.accept.split(','); 
+                        for(const type of types){
+                            if(file.name.endsWith(type)){
+                                return true;
+                            }
+                            if(file.type === type){
+                                return true;
+                            }
+                        }
+                    }
+                    return false;
+                }
             );
-            const invalidFiles = files.filter(
-                file => this.accept && !this.accept.split(/[\.\W]/g).find(type => type && file.type.includes(type))
-            );
+
+            const invalidFiles = files.filter(file => !validFiles.includes(file));
+
             if (invalidFiles.length) {
                 const isMultiple = this.content.multiple;
                 this.$emit('trigger-event', {
@@ -160,6 +176,7 @@ export default {
                     event: { domEvent: event, value: isMultiple ? invalidFiles : invalidFiles[0] },
                 });
             }
+            
             this.handleFiles(event, validFiles);
         },
         handleManualInput(event) {
