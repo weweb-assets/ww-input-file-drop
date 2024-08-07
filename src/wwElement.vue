@@ -137,7 +137,7 @@ export default {
     methods: {
         drop(event) {
             this.isDragging = false;
-            
+
             const blobs = event.dataTransfer?.files;
 
             if (!blobs) return;
@@ -147,25 +147,22 @@ export default {
                         type: blob.type,
                     })
             );
-            const validFiles = files.filter(
-                file => {
-                    if(!this.accept){
-                        return true;
-                    }
-                    else {
-                        const types = this.accept.split(','); 
-                        for(const type of types){
-                            if(file.name.endsWith(type)){
-                                return true;
-                            }
-                            if(file.type === type){
-                                return true;
-                            }
+            const validFiles = files.filter(file => {
+                if (!this.accept) {
+                    return true;
+                } else {
+                    const types = this.accept.split(',');
+                    for (const type of types) {
+                        if (file.name.toLowerCase().endsWith(type)) {
+                            return true;
+                        }
+                        if (file.type.toLowerCase() === type) {
+                            return true;
                         }
                     }
-                    return false;
                 }
-            );
+                return false;
+            });
 
             const invalidFiles = files.filter(file => !validFiles.includes(file));
 
@@ -176,7 +173,7 @@ export default {
                     event: { domEvent: event, value: isMultiple ? invalidFiles : invalidFiles[0] },
                 });
             }
-            
+
             this.handleFiles(event, validFiles);
         },
         handleManualInput(event) {
