@@ -153,10 +153,10 @@ export default {
                 } else {
                     const types = this.accept.split(',');
                     for (const type of types) {
-                        if (file.name.toLowerCase().endsWith(type.trim())) {
+                        if (file.name.trim().toLowerCase().endsWith(type.trim())) {
                             return true;
                         }
-                        if (file.type.toLowerCase() === type.replace(".","").trim()) {
+                        if (file.type.trim().toLowerCase() === type.replace(".","").trim()) {
                             return true;
                         }
                     }
