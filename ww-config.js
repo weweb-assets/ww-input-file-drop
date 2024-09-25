@@ -12,6 +12,9 @@ export default {
         { name: 'initValueChange', label: 'On init value change', event: { value: DEFAULT_VALUE } },
         { name: 'invalidFile', label: 'On invalid file drop', event: { value: DEFAULT_VALUE } },
     ],
+    options: {
+        displayAllowedValues: ['flex', 'inline-flex'],
+    },
     properties: {
         layout: {
             hidden: true,

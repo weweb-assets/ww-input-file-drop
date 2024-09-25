@@ -217,9 +217,7 @@ export default {
 
 <style lang="scss" scoped>
 .ww-input-file-drop {
-    display: flex;
     align-items: center;
-    width: 100%;
     &__layout {
         width: 100%;
     }
