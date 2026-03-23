@@ -8,7 +8,7 @@ export default {
     },
     states: ['drop'],
     triggerEvents: [
-        { name: 'change', label: 'On change', event: { value: DEFAULT_VALUE }, default: true, description: "Run when the value changes (when a file is uploaded)" },
+        { name: 'change', label: 'On change', event: { value: DEFAULT_VALUE }, default: true, description: "Run when a file is uploaded." },
         { name: 'initValueChange', label: 'On init value change', event: { value: DEFAULT_VALUE }, description: "Run when the initial value changes." },
         { name: 'invalidFile', label: 'On invalid file drop', event: { value: DEFAULT_VALUE }, description: "Run when an invalid file is dropped." },
     ],
